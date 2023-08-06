@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
+const nextConfig = { 
   images: {
     domains: [
       "lh3.googleusercontent.com",
       "avatars.githubsercontent.com",
       "res.cloudinary.com"
     ]
+  },
+  experimental: {
+    appDir: true,
   }
 }
 
