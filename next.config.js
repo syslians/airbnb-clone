@@ -3,9 +3,10 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  target: 'serverless',
   images: {
     domains: [
-      // "lh3.googleusercontent.com",
+      "lh3.googleusercontent.com",
       "avatars.githubsercontent.com",
       "res.cloudinary.com"
     ]
