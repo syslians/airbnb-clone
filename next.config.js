@@ -5,7 +5,7 @@ const nextConfig = {
        "lh3.googleusercontent.com",
       "avatars.githubsercontent.com",
       "res.cloudinary.com"
-    ]
+    ],
   },
   experimental: {
     appDir: true,

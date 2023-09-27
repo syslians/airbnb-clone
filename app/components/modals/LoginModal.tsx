@@ -18,7 +18,6 @@ import Button from '../Button';
 import Heading from '../Heading';
 import Input from '../inputs/Input';
 import Modal from './Modal';
-import { AiFillGithub } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
 
 const LoginModal = () => {
@@ -121,12 +120,6 @@ const LoginModal = () => {
           label="구글로 계속"
           icon={FcGoogle}
           onClick={() => signIn('google')}
-        />
-        <Button 
-          outline
-          label="깃허브로 계속"
-          icon={AiFillGithub}
-          onClick={() => {}}
         />
         <div
           className="
