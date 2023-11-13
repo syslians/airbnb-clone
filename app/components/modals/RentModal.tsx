@@ -108,10 +108,10 @@ const RentModal = () => {
    
   const actinLabel = useMemo(() =>  {
     if (step === STEPS.PRICE) {
-      return 'Create';
+      return '생성';
     }
 
-    return 'Next';
+    return '다음';
   }, [step]);
 
   const secondaryActionLabel = useMemo(() => {
@@ -119,14 +119,14 @@ const RentModal = () => {
       return undefined
     }
 
-    return 'Back'
+    return '뒤로'
   }, [step]);
 
   let bodyContent = (
     <div className="flex flex-col gap-8">
       <Heading
-       title='which of these best describes your place?'
-       subtitle='Pick a category'
+       title='어떤 설명이 당신의 장소를 설명하기에 적합한가요?'
+       subtitle='카테고리를 선택하세요'
       />
       <div  
         className="
@@ -273,7 +273,7 @@ const RentModal = () => {
     actionLabel={actinLabel}
     secondaryActionLabel={secondaryActionLabel}
     secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
-    title="airbnb your home"
+    title="에어비앤비 당신의 숙소"
     body={bodyContent}
     />
   )

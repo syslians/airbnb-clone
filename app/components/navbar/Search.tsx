@@ -22,7 +22,7 @@ const Search = () => {
       return getByValue(locationValue as string)?.label;
      }
 
-     return 'Anywhere';
+     return '장소';
   }, [getByValue, locationValue]);
 
   const durationLabel = useMemo(() => {
@@ -38,7 +38,7 @@ const Search = () => {
       return `${diff} Days`
     }
 
-    return 'Any week'
+    return '날짜'
   }, [startDate, endDate]); 
 
   const guestLabel = useMemo(() => {

@@ -130,7 +130,7 @@ const LoginModal = () => {
           "
         >
           <div className="justify-center flex flex-row items-center gap-2">
-            <div>에어비엔비를 이용하시는게 처음이신가요?</div>            
+            <div>에어비엔비 이용이 처음이신가요?</div>            
           </div>
           <div 
           onClick={onToggle}

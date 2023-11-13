@@ -12,77 +12,77 @@ import CategoryBox from '../CategoryBox';
 
 export const categories = [
     {
-     label: 'Beach',
+     label: '해변',
      icon: TbBeach,
      description:  'This property is close to the beach!'
     },
     {
-     label: 'Windmills',
+     label: '풍차',
      icon: GiWindmill,
      description:  'This property has windmills'
     },
     {
-     label: 'Modern',
+     label: '현대풍',
      icon: MdOutlineVilla,
      description:  'This property is modern'
     },
     {
-     label: 'Countryside',
+     label: '시골',
      icon: TbMountain,
      description:  'This property is in the countryside'
     },
     {
-     label: 'Pools',
+     label: '수영장',
      icon: TbPool,
      description:  'This property is a pool'
     }, 
     {
-     label: 'Island',
+     label: '섬',
      icon: GiIsland,
      description:  'This property is on an island'
     },
     {
-     label: 'Lake',
+     label: '호수',
      icon: GiBoatFishing,
      description:  'This property is close to lake'
     }, 
     {
-     label: 'Sking',
+     label: '스키',
      icon: FaSkiing,
      description:  'This property has skiing activities'
     }, 
     {
-     label: 'Castle',
+     label: '성',
      icon: GiCastle,
      description:  'This property is in a castle'
     },
     {
-     label: 'Camping',
+     label: '캠핑',
      icon: GiForestCamp,
      description:  'This property has camping activities'
     }, 
     {
-     label: 'Arctic',
+     label: '북극',
      icon: BsSnow,
      description:  'This property is camping activities'
     },
     {
-     label: 'Cave',
+     label: '동굴',
      icon: GiCaveEntrance,
      description:  'This property is in a cave'
     },
     {
-     label: 'Desert',
+     label: '사막',
      icon: GiCactus,
      description:  'This property is in the desert'
     },
     {
-     label: 'Barns',
+     label: '헛간',
      icon: GiBarn,
      description:  'This property is in the barn'
     },
     {
-     label: 'Lux',
+     label: '럭셔리',
      icon: IoDiamond,
      description:  'This property is luxurios'
     },
