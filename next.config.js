@@ -1,15 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "res.cloudinary.com"
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      // 다른 외부 이미지 호스팅 도메인이 있다면 여기에 추가하세요.
     ],
   },
-  // experimental: {
-  //   appDir: true,
-  // },
-
+  // 다른 설정들...
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
