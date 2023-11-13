@@ -2,6 +2,7 @@
   "name": "airbnb-video",
   "version": "0.1.0",
   "private": true,
+  "builds": [{ "src": "package.json", "use": "@vercel/next" }],
   "homepage": "http://syslians.github.io/airbnb-clone.git",
   "scripts": {
     "dev": "next dev",
