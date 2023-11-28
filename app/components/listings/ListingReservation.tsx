@@ -35,12 +35,13 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
      <div 
       className='
         flex flex-row items-center gap-1 p-4'>
-      <div className='text-2xl font-semibold'>
-         $ {price}
-      </div>
       <div className='font-light text-neutral-600'>
-        하룻밤
+        하룻밤에
+      </div>    
+      <div className='text-2xl font-semibold'>
+          {price}₩
       </div>
+      
      </div>
      <hr />
      <Calendar 
@@ -69,7 +70,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         총합
       </div>
       <div>
-        $ {totalPrice}
+        {totalPrice}₩
       </div>
      </div>
     </div>

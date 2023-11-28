@@ -18,6 +18,8 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
+
+/* 숙소를 등록시 단계들을 enum 열거형으로 정의합니다. */
 enum STEPS {
   CATEGORY = 0,
   LOCATION = 1,
@@ -34,16 +36,10 @@ const RentModal = () => {
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [isLoading, setIsLoading] = useState(false);
 
-   const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: {
-      errors,
-    },
-    reset
-   } = useForm<FieldValues>({
+
+  /* useForm<FieldValues>를 호출할 때 defaultValues를 사용하여 초기값을 설정하고, 호출된 결과를 구조 분해 할당을 통해 여러 변수에 할당하는 것이 이 코드의 핵심입니다.  */
+   const { register, handleSubmit, setValue, watch, formState: { errors, }, reset } = useForm<FieldValues>({
+    /* 각 필드의 기본값(초기값) 설정 */
     defaultValues: {
        category: '',
        location: null,
@@ -57,6 +53,7 @@ const RentModal = () => {
      }
    });
 
+   /* watch 함수를 사용하여 각 필드의 값들을 실시간으로 가져옵니다. */
    const category = watch('category'); 
    const location = watch('location');
    const guestCount = watch('guestCount');
@@ -64,10 +61,12 @@ const RentModal = () => {
    const bathroomCount = watch('bathroomCount');
    const imageSrc = watch('imageSrc');
 
+   /* 지도 컴포넌트를 동적으로 import 합니다. */
    const Map = useMemo(() => dynamic(() => import('../Map'), {
     ssr: false
    }), [location]);
 
+   /* setValue를 사용하여 필드에 값을 설정하는 함수.선택된  항목을 저장한다 */
    const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
       shouldValidate: true,
@@ -76,14 +75,17 @@ const RentModal = () => {
     })
    }
 
+   /* 이전 스텝으로 이동 */
   const onBack = () => {
     setStep((value) => value - 1);
   }
 
+  /* 다음 스텝으로 이동 */
   const onNext = () => {
     setStep((value) => value + 1);
   }
 
+  /* 마지막 등록 스텝이 아니라면 다음 스텝으로 이동 */
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     if (step !== STEPS.PRICE) {
       return onNext();
@@ -91,6 +93,7 @@ const RentModal = () => {
 
     setIsLoading(true);
 
+    /* /api/listings 엔드포인트로 입력된 form data를 axsios를 이용하여 post 전송 */
     axios.post('/api/listings', data)
       .then(() => {
         toast.success('Listing Created!');
@@ -106,6 +109,7 @@ const RentModal = () => {
       })
   }
    
+  /* 현재 스텝에따라 액션 레이블 설정 */
   const actinLabel = useMemo(() =>  {
     if (step === STEPS.PRICE) {
       return '생성';
@@ -281,40 +285,3 @@ const RentModal = () => {
 
 export default RentModal;
 
-/*
-위 코드는 에어비엔비 스타일의 모달을 구현하는 RentModal 컴포넌트입니다
-이 모달은 사용자가 자신의 숙소를 등록하기 위한 여러 단계롤 구성되어 있으며,
-각 단계별로 필요한 정보를 입력받습니다
-
-1. 모듈 및 라이브러리 임포트
-- useMemo , useState : React의 훅으로 상태를 관리하고 메모이제이션을 할 때 사용합니다
-- useForm , FieldValues : react-hook-form 라이브러리의 훅으로 폼관리를 위해 사용합니다
-- useRentModal : 커스텀 훅으로 모달의 상태를 관리하는 훅 입니다
-
-2. RentModal 컴포넌트 정의
-- enum STEPS : 다양한 스텝들을 나타내는 열거형입니다
-- useState(STEPS.CATEGORY) : 상태 훅을 사용하여 현재 진행중인 스탭을 관리합니다
-  초기값은 STEPS.CATEGORY 로 설정됩니다
-
-3. 폼 관리 훅 사용
-- useForm : react-hook-form 훅을 사용하여 폼 관리를 시작합니다
-- defaultValues 에는 각 필드의 기본값이 설정되어 있습니다
-
-4. actionLabel 및 secondaryActionLabel 계산
-- useMemo : 메모이제이션을 통해 계산된 값들을 캐싱하여 성능을 최적화합니다
-- actionLabel1 : 현재 스텝에따라 다른 레이블을 반환합니다.스텝이 STEPS.CATEGORY인 경우
-  undefined를, 그 외에는 Back을 반환합니다
-
-5. bodyContent 구성
-- bodyContent : 현재 스텝에 따라 모달의 본문 내용을 설정합니다
-  초기 값은 카테고리 선택('STEPS.CATEGOEY')스텝에 해당하는 내용입니다
-- CountrySelect 과 카테고리 선택을 이한 CategoryInput 컴포넌트들이 렌더링 됩니다
-
-6. 모달 렌더링
-- Modal : 본문 내용('bodyContent')을 포함하여 모달을 렌더링 합니다
-- 모달은 에어비엔비 스타일의 모달로싸, 상태값과 액션 함수들을 모달 컴포넌트에 전달하여 렌더링 합니다
-
-이렇게 구현된 RentModal 컴포넌트는 에어비엔비 스타일의 숙소 등록 모달을 다단계로 나누어 구성하고,
-각 단계별로 필요한 정보들을 입력받는 기능을 갖추고 있습니다
-
-*/

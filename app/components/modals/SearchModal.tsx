@@ -15,48 +15,50 @@ import Heading from '../Heading';
 import Calendar from '../inputs/Calendar';
 import Counter from '../inputs/Counter';
 
+// 단계를 정의하는 열거형 (enum)입니다.차례대로 위치, 날짜, 상세정보 순으로 나열됩니다.
 enum STEPS {
   LOCATION = 0,
   DATE = 1,
   INFO = 2  
 }
 
-
+// SearchModal 컴포넌트를 정의합니다.
 const SearchModal = () => {
+  // Next.js의 useRouter 및 useSearchParams 훅을 사용하여 라우터와 쿼리 파라미터를 가져옵니다.
   const router = useRouter();
   const params = useSearchParams();
   const searchModal = useSearchModal();
 
-  const [location, setLocation] = useState<CountrySelectValue>()
+  // 컴포넌트의 상태를 정의합니다.
+  const [location, setLocation] = useState<CountrySelectValue>();
   const [step, setStep] = useState(STEPS.LOCATION);
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
   const [bathroomCount, setBathroomCount] = useState(1);
-  const [dateRange, setDateRange] = useState<Range>({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: 'selection' 
-  });
+  const [dateRange, setDateRange] = useState<Range>({ startDate: new Date(), endDate: new Date(), key: 'selection' });
 
-  const Map = useMemo(() => dynamic(() => import('../Map'), {
-    ssr: false,
-  }), [location]);
+  // 지도 컴포넌트를 동적으로 로드하기 위해 dynamic 함수를 사용합니다.
+  const Map = useMemo(() => dynamic(() => import('../Map'), { ssr: false }), [location]);
 
+  // 이전 단계로 이동하는 함수입니다.
   const onBack = useCallback(() => {
-    setStep((value) => value -1);
+    setStep((value) => value - 1);
   }, []);
 
+  // 다음 단계로 이동하는 함수입니다.
   const onNext = useCallback(() => {
     setStep((value) => value + 1);
   }, []);
 
+  // 폼 제출 시 실행되는 함수입니다.
   const onSubmit = useCallback(async () => {
+    // INFO 단계가 아닌 경우 다음 단계로 이동합니다.
     if (step !== STEPS.INFO) {
         return onNext();
     }
 
+    // 현재 쿼리 파라미터를 가져와서 업데이트합니다.
     let currentQuery = {};
-
     if (params) {
         currentQuery = qs.parse(params.toString());
     }
@@ -69,92 +71,83 @@ const SearchModal = () => {
       bathroomCount  
     };
 
+    // 시작일과 종료일이 존재하는 경우 ISO 형식으로 변환하여 업데이트합니다.
     if (dateRange.startDate) {
        updatedQuery.startDate = formatISO(dateRange.startDate);
     }
 
     if (dateRange.endDate) {
-        updatedQuery.enDate = formatISO(dateRange.endDate);
+        updatedQuery.endDate = formatISO(dateRange.endDate);
     }
 
+    // 쿼리 파라미터를 포함한 URL을 생성합니다.
     const url = qs.stringifyUrl({
        url: '/',
        query: updatedQuery 
     }, { skipNull: true });
 
-     setStep(STEPS.LOCATION);
-     searchModal.onClose();
+    // 상태와 모달을 초기화하고 URL을 업데이트합니다.
+    setStep(STEPS.LOCATION);
+    searchModal.onClose();
+    router.push(url);
+  }, [step, searchModal, location, router, guestCount, roomCount, bathroomCount, dateRange, onNext, params]);  
 
-     router.push(url);
-  }, 
-  [
-    step,
-    searchModal,
-    location,
-    router,
-    guestCount,
-    roomCount,
-    bathroomCount,
-    dateRange,
-    onNext,
-    params
-  ]);  
-
+  // 액션 및 보조 액션 레이블을 정의합니다.
   const actionLabel = useMemo(() => {
-    if (step === STEPS.INFO) {
-       return 'Search'; 
-    }
-
-    return 'Next';
-  }, [step]);  
-
-  const secondaryActionLabel = useMemo(() => {
-    if (step === STEPS.LOCATION) {
-      return undefined; 
-    }
-
-    return 'Back';
+    return step === STEPS.INFO ? '검색' : '다음';
   }, [step]);
 
+  const secondaryActionLabel = useMemo(() => {
+    return step === STEPS.LOCATION ? undefined : '뒤로';
+  }, [step]);
+
+  // 현재 단계에 따라서 본문 컨텐츠를 설정합니다.
   let bodyContent = (
     <div className="flex flex-col gap-8">
+      {/* 위치 설정 단계의 제목 및 부제목 */}
       <Heading
         title="어디를 가고 싶으신가요?"
         subtitle="최고의 장소를 찾아보세요!"
       />
+      {/* 국가 선택 컴포넌트 */}
       <CountrySelect 
         value={location}
-        onChange={(value) => 
-            setLocation(value as CountrySelectValue)
-        }
+        onChange={(value) => setLocation(value as CountrySelectValue)}
       />
       <hr />
-      <Map center={location?.latlng}  />
+      {/* 지도 컴포넌트 */}
+      <Map center={location?.latlng} />
     </div>
-  )
+  );
 
+  // 날짜 선택 단계인 경우
   if (step === STEPS.DATE) {
     bodyContent = (
        <div className="flex flex-col gap-8">
+        {/* 날짜 선택 단계의 제목 및 부제목 */}
         <Heading 
            title="언제 가실 예정이신가요?"
            subtitle="일행과 일정이 맞을때가 적절합니다!"
         />
+        {/* 캘린더 컴포넌트 */}
         <Calendar
            value={dateRange}
            onChange={(value) => setDateRange(value.selection)}
         />
        </div> 
-    )
+    );
   }
 
+  // 정보 입력 단계인 경우
   if (step === STEPS.INFO) {
     bodyContent = (
         <div className="flex flex-col gap-8">
+          {/* 정보 입력 단계의 제목 및 부제목 */}
           <Heading 
             title="More information"
             subtitle="최고의 장소를 찾아보세요!"
           />
+          {/* 인원, 방, 화장실 수를 선택하는 컴포넌트 */}
           <Counter
             title="손님"
             subtitle="일행이 몇분이신가요?"
@@ -174,9 +167,10 @@ const SearchModal = () => {
             onChange={(value: any) => setBathroomCount(value)}
           />
         </div>
-    )
+    );
   }
   
+  // 모달 컴포넌트를 반환합니다.
   return (
     <Modal
       isOpen={searchModal.isOpen}
@@ -191,56 +185,4 @@ const SearchModal = () => {
   );
 }
 
-export default SearchModal
-
-/* 위 코드는 검색모달('SearchModal')을 정의하는 리액트 컴포넌트입니다.
-   이 모달은 검색필터를 설정하기위해 사용됩니다.모달은 여러단계로 구성되어 있으며,
-   각 단계에서 사용자는 검색조건을 설정할수 있습니다.
-   
-    1.enum STEPS {...} : 검색모달의 단계를 나타내는 열거형 STEP를 정의합니다. 
-     각 단계는 LOCATION, DATE, INFO로 구성되어있습니다. 
-    
-    2. const SearchModal = () => { ... } : SearchModal 컴포넌트를 정의합니다. 
-
-    3. const router = useRouter(); 
-       Next/navigation 모듈에서 useRouter()를 사용하여 라우터 객체를 가져옵니다 
-
-    4. const params = useSearchParams(); 
-       next/navigation 모듈에서 useSearchParams()를 사용하여 URL 매개변수를 가져옵니다. 
-
-    5. 상태관리에 필요한 여러변수들을 useState를 사용하여 선언합니다.
-       이 변수들은 국가('location'), 단계('step'), 인원수('guestCount', 'roomCount', 'bathroomCount'),
-       날짜범위('dateRange')를 나타냅니다.
-
-    6. const Map = useMemo(() => import('../Map'), {...}), [location]);
-       국가가 선택될때만 동적으로 Map 컴포넌트를 로드하기 위해 dynamic 함수를 사용하여
-       동적으로 컴포넌트를 임포트합니다. 
-    
-    7. const onBack = useCallbackk(() -> {...}, []);
-       이전 단계로 이동하기위한 콜백함수를 정의합니다. 
-
-    8. const onNext = useCallback(() => {...}, []);
-       다음단계로 이동하기위한 콜백함수를 정의합니다. 
-
-    9. const onSubmit = useCallback(() => {...}, [...]);
-       검색조건을 설정한 후 검색을 실행하는 콜백함수를 정의합니다.검색이 실행되면
-       URL을 업데이트하고 모달을 닫습니다.
-
-    10. const actionLabel = useMemo(() => {...}, [step]);
-        현재 단계에 따라 액션레이블을 설정합니다.
-
-    11. const secondaryActionLabel = useMemo(() => {...}, [step])
-        현재단계에 따라 액션레이블을 설정합니다. 
-    
-    12. let bodyContent = (...) : 현재단계에 따라 모달 내용을 설정하는 변수를 선언합니다. 
-
-    13. 각 단계에 따라 모달내용을 설정합니다.CountrySelect, Calendar, Counter 컴포넌트를 사용하여
-        국가, 날짜범위, 인원수를 선택할 수 있도록합니다. 
-
-    14. returnn (...) 최종적으로 Modal 컴포넌트를 렌더링합니다.모달은 isOpen 상태에 따라 열립니다. 
-        사용자가 검색조건을 설정한 후 Search, Next버튼을 클릭하면 onSubmit 함수가 실행됩니다.
-        또는 Back 버튼을 클릭하면 이전단계로 돌아갑니다. 
-
-        이 컴포넌트는 검색조건을 설정하기 위한 모달을 정의하고 사용자가 각 단계에서 원하는검색조건을
-        설정할 수 있도록합니다. 
-   */
+export default SearchModal;

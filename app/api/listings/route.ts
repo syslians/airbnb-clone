@@ -23,7 +23,8 @@ export async function POST(
     guestCount,
     location,
     price
-  } = body; 
+  } = body;
+  console.log("POST 요청 body:",body)
 
   Object.keys(body).forEach((value: any) => {
     if (!body[value]) {

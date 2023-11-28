@@ -15,6 +15,8 @@ interface HomeProps {
 const Home = async ({ searchParams }: HomeProps) => {
   const listings = await getListings(searchParams);
   const currentUser = await getCurrentUser();
+  console.log("메인화면 리스트 : ",listings);
+  console.log("getCurrentUSer 결과 : ", currentUser);
 
   if (listings.length === 0) {
     return (
@@ -40,7 +42,7 @@ const Home = async ({ searchParams }: HomeProps) => {
             gap-8
           "
         >
-          {listings.map((listing: any) => (
+          {listings.map((listing: any) => ( 
             <ListingCard
               currentUser={currentUser}
               key={listing.id}
